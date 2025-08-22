@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>STEM</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f8ff;
+      color: #7C76C4;
+      transition: 0.4s;
+    }
+
+    body.dark {
+      background: #202242;
+      color: #f0f0f0;
+    }
+
+    header {
+      background: linear-gradient(to right, #909EDE);
+      color: #909EDE;
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    nav {
+  background-color: #FFDB58; /* Light mode yellow */
+  padding: 12px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.dark nav {
+  background-color: #FFEF17; /* Dark mode taskbar */
+}
+
+ nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    #toggle-dark {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      padding: 6px 12px;
+      background: #0077b6;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    section {
+      padding: 40px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      max-width: 350px;
+      padding: 20px;
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .dark .card {
+      background-color: #797BB4;
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .info {
+      display: none;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .card.active .info {
+      display: block;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .video-container {
+      text-align: center;
+      margin: 40px;
+    }
+
+    iframe {
+      width: 100%;
+      max-width: 600px;
+      height: 340px;
+      border: none;
+      border-radius: 10px;
+    }
+
+footer {
+  background-color: #FFDB58;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  color: #0C1F82; /* dark text for light mode */
+}
+
+.dark footer {
+  background-color: #FFEF17; /* dark footer background */
+  color: #7C76C4; /* light text */
+}
+
+    @media (max-width: 768px) {
+      section {
+        flex-direction: column;
+      }
+    }
+	
+	.card {
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  max-width: 350px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+  </style>
+</head>
+<body>
+
+  <button id="toggle-dark">🌙 Dark Mode</button>
+
+  <div style="background-image: url('lemon.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; height: 150px; color: #0C1F82; text-align: center; padding: 50px;">
+    <h1>Welcome to STEM</h1>
+    <p>Science, Technology, Engineering & Math for Students</p>
+  </div>
+
+  <nav>
+  <a href="cheese 2.html">About</a>
+  <a href="video.html">Video</a>
+  <a href="feedback.html">Feedback</a>
+  <a href="ai.html">AI</a>
+
+  </nav>
+
+<section id="science">
+  <div class="card" onclick="location.href='science (1).html'">
+    <img src="cat sc 2.jpg" alt="Science" />
+    <h2>Science</h2>
+    <p>Explore the natural world with chemistry, biology, and physics!</p>
+  </div>
+
+  <div class="card" onclick="location.href='technology (1).html'">
+    <img src="coding cat.jpg" alt="Technology" />
+    <h2>Technology</h2>
+    <p>Code, create, and innovate with the latest in tech and AI.</p>
+  </div>
+
+  <div class="card" onclick="location.href='engineering (1).html'">
+    <img src="cat tech 4.jpg" alt="Engineering" />
+    <h2>Engineering</h2>
+    <p>Design solutions with creativity and real-world problem-solving.</p>
+  </div>
+
+  <div class="card" onclick="location.href='mathematics (1).html'">
+    <img src="math 1.jpg" alt="Math" />
+    <h2>Mathematics</h2>
+    <p>Crack patterns, puzzles, and unlock logic and strategy skills.</p>
+  </div>
+</section>
+
+  <footer>
+    <p>© 2025 EchoSTEM: Fuel Your Curiosity.</p>
+  </footer>
+
+  <script>
+    // Dark mode toggle
+    const toggle = document.getElementById('toggle-dark');
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      toggle.textContent = document.body.classList.contains('dark') ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+
+    // Click-to-show info for cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.toggle('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

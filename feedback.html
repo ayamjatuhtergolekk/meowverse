@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>STEM Feedback</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f8ff;
+      color: #7C76C4;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      transition: 0.4s;
+    }
+    body.dark {
+      background: #040936;
+      color: #f0f0f0;
+    }
+    #toggle-dark {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      padding: 6px 12px;
+      background: #0077b6;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    form {
+      max-width: 500px;
+      margin: 80px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+    .dark form {
+      background: #202242;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      background: #00b4d8;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0077b6;
+    }
+    a.back {
+      display: inline-block;
+      margin: 20px;
+      padding: 10px 20px;
+      background: #00b4d8;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+    a.back:hover {
+      background: #0077b6;
+    }
+  </style>
+</head>
+<body>
+  <button id="toggle-dark">🌙 Dark Mode</button>
+
+  <section id="feedback">
+  <h2 style="text-align: center;">Feedback</h2>
+  <form action="https://formspree.io/f/mblkezlp" method="POST" style="max-width: 500px; margin: auto;">
+    <label>Name:</label><br>
+    <input type="text" name="name" required style="width: 100%; padding: 10px; margin: 10px 0;"><br>
+
+    <label>Email:</label><br>
+    <input type="email" name="email" required style="width: 100%; padding: 10px; margin: 10px 0;"><br>
+
+    <label>Your Feedback:</label><br>
+    <textarea name="message" rows="4" required style="width: 100%; padding: 10px; margin: 10px 0;"></textarea><br>
+
+    <button type="submit" style="padding: 10px 20px; background: #00b4d8; color: white; border: none; border-radius: 6px; cursor: pointer;">
+      Send Feedback
+    </button>
+  </form>
+</section>
+
+  <a href="cheese 3 (1).html" class="back">⬅ Back to Home</a>
+
+  <script>
+    // Dark mode toggle
+    const toggle = document.getElementById('toggle-dark');
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      toggle.textContent = document.body.classList.contains('dark') ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+  </script>
+</body>
+</html>
+

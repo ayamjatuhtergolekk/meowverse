@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Science Stream Career Advisor</title>
+  <style>
+    :root{
+      --bg:#0f172a;          /* slate-900 */
+      --panel:#0b1022;       /* slightly darker card */
+      --text:#e5e7eb;        /* zinc-200 */
+      --muted:#94a3b8;       /* slate-400 */
+      --accent:#8b5cf6;      /* violet-500 */
+      --accent-2:#22d3ee;    /* cyan-400 */
+      --good:#22c55e;        /* green-500 */
+      --warn:#f59e0b;        /* amber-500 */
+      --bad:#ef4444;         /* red-500 */
+      --chip:#1f2937;        /* gray-800 */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(139,92,246,.25), transparent),
+                  radial-gradient(800px 400px at 90% 0%, rgba(34,211,238,.15), transparent),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.55;
+    }
+    .wrap{
+      max-width:980px; margin: 40px auto; padding: 0 16px;
+    }
+    header{ display:flex; align-items:center; gap:16px; margin-bottom:20px; }
+    .logo{ width:46px; height:46px; border-radius:12px; background:
+      conic-gradient(from 180deg at 50% 50%, var(--accent), var(--accent-2), var(--accent));
+      filter: drop-shadow(0 12px 28px rgba(139,92,246,.35));
+    }
+    h1{ font-size: clamp(24px, 3vw, 36px); margin:0; letter-spacing:.3px }
+    p.sub{ margin:4px 0 0; color:var(--muted) }
+
+    .grid{ display:grid; grid-template-columns: 1.2fr .9fr; gap:18px }
+    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr } }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px; padding:18px; backdrop-filter: blur(6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .input, textarea, select{
+      width:100%; background:#0b122a; border:1px solid rgba(255,255,255,.08);
+      color:var(--text); border-radius:14px; padding:12px 14px; font-size:16px;
+      outline: none; transition: border-color .2s, box-shadow .2s;
+    }
+    .input:focus, textarea:focus, select:focus{ border-color: rgba(139,92,246,.8); box-shadow: 0 0 0 3px rgba(139,92,246,.25) }
+    textarea{ min-height:120px; resize: vertical }
+    .hint{ font-size:13px; color:var(--muted); margin-top:8px }
+
+    .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px }
+    .chip{ background:var(--chip); border:1px solid rgba(255,255,255,.08); color:#cbd5e1; padding:6px 10px; border-radius:999px; cursor:pointer; font-size:14px }
+    .chip.active{ outline: 2px solid rgba(139,92,246,.8); color:white }
+
+    .row{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media (max-width:700px){ .row{ grid-template-columns:1fr } }
+
+    .btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px }
+    button{
+      border:none; cursor:pointer; border-radius:14px; padding:12px 16px; font-weight:600;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2)); color:white;
+      box-shadow: 0 10px 24px rgba(34,211,238,.25); transition: transform .05s ease, filter .2s;
+    }
+    button.secondary{ background:#0b122a; color:#e5e7eb; border:1px solid rgba(255,255,255,.1); box-shadow:none }
+    button:active{ transform: translateY(1px) }
+
+    .result{ display:flex; flex-direction:column; gap:12px; }
+    .badge{ font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:#c4b5fd }
+    .card h3{ margin:0 0 6px; font-size:20px }
+    .why{ color:var(--muted); margin:6px 0 0; font-size:15px }
+
+    .score{ font-variant-numeric: tabular-nums; font-weight:700; margin-left:auto; padding:4px 8px; border-radius:10px; background:#0b122a; border:1px solid rgba(255,255,255,.08) }
+
+    .divider{ height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent); margin:12px 0 }
+
+    a{ color:#a5b4fc }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Science Stream Career Advisor</h1>
+        <p class="sub">Type your interests and preferences. The advisor scores careers and explains why they fit.</p>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <div class="badge">Describe yourself</div>
+        <label for="about" class="hint">Example: “I love biology and helping patients. I’m okay with long studies but hate programming. I like working indoors and don’t mind blood.”</label>
+        <textarea id="about" placeholder="Tell me what you enjoy, subjects you like, study length, dream lifestyle, etc."></textarea>
+
+        <div class="row" style="margin-top:12px">
+          <div>
+            <div class="hint">Tap to add interests</div>
+            <div id="chips-interests" class="chips"></div>
+          </div>
+          <div>
+            <div class="hint">Favourite subjects</div>
+            <div id="chips-subjects" class="chips"></div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <div>
+            <label class="hint" for="study">Preferred study length</label>
+            <select id="study" class="input">
+              <option value="any" selected>Any / Not sure</option>
+              <option value="short">Shortest path (≤3 years)</option>
+              <option value="medium">Moderate (4 years)</option>
+              <option value="long">Long (5+ years, professional)</option>
+            </select>
+          </div>
+          <div>
+            <label class="hint" for="workstyle">Work style preference</label>
+            <select id="workstyle" class="input">
+              <option value="any" selected>Any / Mixed</option>
+              <option value="people">People-facing</option>
+              <option value="research">Research/academia</option>
+              <option value="technical">Hands-on technical/building</option>
+              <option value="outdoor">Field/outdoor</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button id="suggest">Get Suggestions</button>
+          <button id="clear" class="secondary">Clear</button>
+        </div>
+      </section>
+
+      <aside class="card" id="results">
+        <div class="badge">Top Matches</div>
+        <p class="hint">Your personalized results will appear here.</p>
+      </aside>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <div class="badge">How it works</div>
+      <p class="why">This advisor uses a lightweight rules engine. It extracts keywords from your description and blends them with the chips and dropdowns. Each career has weighted strengths (e.g., biology, coding, people‑facing), and you’ll see the evidence behind each match.</p>
+    </div>
+  </div>
+
+  <script>
+    // --- Vocabulary ---------------------------------------------------------
+    const chipsInterests = [
+      'Helping patients','Working with animals','Coding/AI','Robotics','Building things','Environment','Space/astronomy','Crime & forensics','Business/management','Design & creativity'
+    ];
+    const chipsSubjects  = ['Biology','Chemistry','Physics','Mathematics','Computer Science','Geography'];
+
+    // Map loose keywords → normalized signals used by the engine
+    const keywordMap = new Map([
+      // subjects
+      [/\b(bio|biology|medicine|medical|anatomy|physiology|hospital|patient|clinic|healthcare|blood|surgery|doctor|dentist|nurse|vet(erinary)?|pharma(cy|cist)?)\b/gi,'biology'],
+      [/\b(chem|chemistry|organic|reaction|laboratory|lab|pharmaceutical|polymer|process)\b/gi,'chemistry'],
+      [/\b(physics|electro(nics)?|circuit|mechanics|thermo|quantum|optic|electric|magnet|robot)\b/gi,'physics'],
+      [/\b(math|mathematics|calculus|algebra|statistics|probability|numbers)\b/gi,'mathematics'],
+      [/\b(cs|computer|program(ming)?|coding|software|ai|machine learning|data|algorithm)\b/gi,'computer'],
+      [/\b(geo(graphy)?|geology|environment|ecology|wildlife|climate|sustainab(le|ility)|outdoor|fieldwork)\b/gi,'environment'],
+
+      // interests & styles
+      [/\b(patient|people|team|communicat(ion|ing)|teaching|public)\b/gi,'people'],
+      [/\b(research|academic|university|paper|publication|experiment|hypothesis)\b/gi,'research'],
+      [/\b(build|make|hands?-?on|hardware|machine|prototype|manufactur(e|ing))\b/gi,'technical'],
+      [/\b(outdoor|field|site|survey)\b/gi,'outdoor'],
+      [/\b(space|astronomy|astrophysics|cosmos|telescope|nasa)\b/gi,'space'],
+      [/\b(forensic|crime|investigat(e|ion)|evidence|dna|lab)\b/gi,'forensic'],
+      [/\b(animal|pet|zoo|wildlife|veterinar(y|ian))\b/gi,'animals'],
+      [/\b(design|creative|art|ui|ux|product)\b/gi,'design'],
+      [/\b(business|startup|entrepreneur|management)\b/gi,'business']
+    ]);
+
+    // Careers dictionary with weighted traits (0-5)
+    // Keep it simple, readable, and easy to tweak.
+    const CAREERS = [
+      { id:'doctor', title:'Medical Doctor', degree:'MBBS/MD', weights:{ biology:5, people:4, research:2, technical:2 }, minStudy:'long', notes:'Strong biology + people-facing. Long professional training.' },
+      { id:'dentist', title:'Dentist', degree:'BDS/Dentistry', weights:{ biology:5, technical:3, people:3 }, minStudy:'long', notes:'Biology + fine motor skills; clinic-based.' },
+      { id:'pharmacist', title:'Pharmacist', degree:'BPharm/PharmD', weights:{ biology:3, chemistry:5, people:3, research:2 }, minStudy:'long', notes:'Chemistry-heavy with patient interaction.' },
+      { id:'nurse', title:'Nurse', degree:'BNursing', weights:{ biology:4, people:5 }, minStudy:'medium', notes:'People‑centric healthcare with practical skills.' },
+      { id:'vet', title:'Veterinarian', degree:'DVM', weights:{ biology:5, animals:5, people:2 }, minStudy:'long', notes:'For animal lovers; biology‑heavy, clinical.' },
+
+      { id:'chemeng', title:'Chemical Engineer', degree:'BEng Chemical', weights:{ chemistry:5, mathematics:3, technical:4 }, minStudy:'medium', notes:'Processes, materials, energy, manufacturing.' },
+      { id:'mecheng', title:'Mechanical Engineer', degree:'BEng Mechanical', weights:{ physics:4, mathematics:4, technical:5 }, minStudy:'medium', notes:'Machines, robotics, product/mech design.' },
+      { id:'ee', title:'Electrical & Electronic Engineer', degree:'BEng E&E', weights:{ physics:5, mathematics:4, technical:4 }, minStudy:'medium', notes:'Circuits, power, communications, embedded.' },
+      { id:'civil', title:'Civil/Structural Engineer', degree:'BEng Civil', weights:{ physics:3, mathematics:4, technical:4, outdoor:2 }, minStudy:'medium', notes:'Infrastructure, structures, geotech; some field work.' },
+      { id:'envsci', title:'Environmental Scientist/Engineer', degree:'BEnvSci/BEng Environmental', weights:{ environment:5, chemistry:3, research:3, outdoor:3 }, minStudy:'medium', notes:'Sustainability, climate, water/air/soil.' },
+
+      { id:'software', title:'Software Engineer', degree:'BSc/BEng CS/SE', weights:{ computer:5, mathematics:4, technical:3 }, minStudy:'medium', notes:'Programming, systems, apps; broad industry demand.' },
+      { id:'datasci', title:'Data Scientist/AI', degree:'BSc Data/CS + MSc (often)', weights:{ computer:5, mathematics:5, research:3 }, minStudy:'medium', notes:'Statistics + programming + ML/AI; research‑friendly.' },
+
+      { id:'biomed', title:'Biomedical Scientist', degree:'BSc Biomedical', weights:{ biology:5, research:4, chemistry:3 }, minStudy:'medium', notes:'Lab diagnostics, research, biotech.' },
+      { id:'biotech', title:'Biotech/Product Dev', degree:'BSc Biotechnology', weights:{ biology:4, chemistry:3, business:2, design:2 }, minStudy:'medium', notes:'Translating biology to products/startups.' },
+      { id:'forensic', title:'Forensic Scientist', degree:'BSc Forensic/Bio', weights:{ biology:4, chemistry:3, forensic:4, research:2 }, minStudy:'medium', notes:'Evidence analysis, crime labs, DNA.' },
+      { id:'geoscience', title:'Geologist/Geoscientist', degree:'BSc Geology', weights:{ environment:3, physics:2, outdoor:4 }, minStudy:'medium', notes:'Earth resources, hazards, exploration; fieldwork.' },
+      { id:'astronomy', title:'Astronomer/Astrophysicist', degree:'BSc Physics → MSc/PhD', weights:{ physics:5, research:5, space:5, mathematics:4 }, minStudy:'long', notes:'Research‑heavy; academia/observatories.' }
+    ];
+
+    // Helper: toggle chips
+    function makeChips(containerId, items){
+      const el = document.getElementById(containerId);
+      items.forEach(txt=>{
+        const c=document.createElement('button');
+        c.type='button'; c.className='chip'; c.textContent=txt;
+        c.addEventListener('click',()=>c.classList.toggle('active'));
+        el.appendChild(c);
+      })
+    }
+    makeChips('chips-interests', chipsInterests);
+    makeChips('chips-subjects', chipsSubjects);
+
+    // Extract signals from free text + UI
+    function extractSignals(){
+      const text = (document.getElementById('about').value||'').toLowerCase();
+      const signals = { biology:0, chemistry:0, physics:0, mathematics:0, computer:0, environment:0,
+                        people:0, research:0, technical:0, outdoor:0, space:0, forensic:0, animals:0,
+                        design:0, business:0 };
+
+      for (const [regex, key] of keywordMap){
+        if (regex.test(text)) signals[key] = Math.min(5, (signals[key]||0) + 3); // weight text hits
+      }
+
+      // From chips (lighter weight)
+      document.querySelectorAll('#chips-interests .chip.active').forEach(c=>{
+        const t=c.textContent;
+        if (/patient/i.test(t)) signals.people+=2;
+        if (/animals/i.test(t)) signals.animals+=3;
+        if (/coding|ai/i.test(t)) signals.computer+=3;
+        if (/robot/i.test(t)) { signals.technical+=2; signals.physics+=1; }
+        if (/building/i.test(t)) { signals.technical+=3; signals.physics+=1; }
+        if (/environment/i.test(t)) signals.environment+=3;
+        if (/astronomy|space/i.test(t)) { signals.space+=3; signals.physics+=1; }
+        if (/forensic|crime/i.test(t)) { signals.forensic+=3; signals.biology+=1; }
+        if (/business/i.test(t)) signals.business+=2;
+        if (/design/i.test(t)) signals.design+=2;
+      });
+      document.querySelectorAll('#chips-subjects .chip.active').forEach(c=>{
+        const s=c.textContent.toLowerCase();
+        if (s.includes('biology')) signals.biology+=3;
+        if (s.includes('chem')) signals.chemistry+=3;
+        if (s.includes('physics')) signals.physics+=3;
+        if (s.includes('math')) signals.mathematics+=3;
+        if (s.includes('computer')) signals.computer+=3;
+        if (s.includes('geography')) signals.environment+=2;
+      });
+
+      // Study length preference
+      const study = document.getElementById('study').value;
+      // Work style
+      const workstyle = document.getElementById('workstyle').value;
+
+      return { signals, study, workstyle };
+    }
+
+    // Score careers
+    function scoreCareers(ctx){
+      const {signals, study, workstyle} = ctx;
+      const scored = CAREERS.map(c => {
+        let score = 0;
+        for (const [k,v] of Object.entries(c.weights)){
+          score += (signals[k]||0) * v; // dot product style
+        }
+
+        // Study length penalty/bonus
+        const studyMap = { short:1, medium:2, long:3, any:0 };
+        const need = studyMap[c.minStudy]||0;
+        const want = studyMap[study]||0;
+        if (study !== 'any'){
+          if (want < need) score -= 12; // wants shorter than needed → penalty
+          if (want > need) score += 2;  // ok with longer → tiny bonus
+        }
+
+        // Workstyle nudges
+        if (workstyle==='people' && (c.weights.people||0)>0) score += 6;
+        if (workstyle==='research' && (c.weights.research||0)>0) score += 6;
+        if (workstyle==='technical' && (c.weights.technical||0)>0) score += 6;
+        if (workstyle==='outdoor' && (c.weights.outdoor||0)>0) score += 6;
+
+        return { ...c, score };
+      })
+      // Normalize to 0-100 for UI
+      const max = Math.max(...scored.map(s=>s.score), 1);
+      scored.forEach(s=> s.ui = Math.round((s.score / max) * 100));
+      return scored.sort((a,b)=> b.score - a.score);
+    }
+
+    function explainMatch(career, signals){
+      // Build a short explanation using top matching traits
+      const pairs = Object.entries(career.weights)
+        .map(([k,v]) => ({k,v, contrib:(signals[k]||0)*v}))
+        .filter(p=>p.contrib>0)
+        .sort((a,b)=>b.contrib-a.contrib)
+        .slice(0,3)
+        .map(p=>{
+          const label = ({biology:'biology/health', chemistry:'chemistry/lab', physics:'physics', mathematics:'math', computer:'coding/CS', environment:'environment', people:'people‑facing', research:'research', technical:'hands‑on', outdoor:'field work', space:'space', forensic:'forensics', animals:'animals', design:'design', business:'business'})[p.k] || p.k;
+          return label;
+        });
+      const bits = [
+        pairs.length?`Strong signals in <b>${pairs.join(', ')}</b>.`:'' ,
+        career.notes? career.notes : ''
+      ].filter(Boolean).join(' ');
+      return bits;
+    }
+
+    function renderResults(list, signals){
+      const box = document.getElementById('results');
+      box.innerHTML = '<div class="badge">Top Matches</div>';
+      if (!list.length || list[0].score<=0){
+        box.insertAdjacentHTML('beforeend', `<p class="hint">No strong signals yet. Try adding favourite subjects, what you enjoy doing, and your study preferences.</p>`);
+        return;
+      }
+
+      list.slice(0,5).forEach((c, idx)=>{
+        const why = explainMatch(c, signals);
+        const rank = idx+1;
+        box.insertAdjacentHTML('beforeend', `
+          <div class="divider"></div>
+          <div style="display:flex; align-items:center; gap:10px">
+            <h3>#${rank} · ${c.title}</h3>
+            <span class="score">${c.ui}/100</span>
+          </div>
+          <div class="why">${why}</div>
+          <div class="hint">Typical degree: ${c.degree} · Study length: <b>${c.minStudy}</b></div>
+        `);
+      });
+
+      box.insertAdjacentHTML('beforeend', `
+        <div class="divider"></div>
+        <p class="hint">These are suggestions, not rules. Shadow professionals, join clubs/competitions, and do short courses to validate your choices.</p>
+      `);
+    }
+
+    // Actions
+    document.getElementById('suggest').addEventListener('click', ()=>{
+      const ctx = extractSignals();
+      const ranked = scoreCareers(ctx);
+      renderResults(ranked, ctx.signals);
+    });
+    document.getElementById('clear').addEventListener('click', ()=>{
+      document.getElementById('about').value='';
+      document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+      document.getElementById('study').value='any';
+      document.getElementById('workstyle').value='any';
+      document.getElementById('results').innerHTML = '<div class="badge">Top Matches</div><p class="hint">Your personalized results will appear here.</p>';
+    });
+  </script> 
+  
+  <a href="cheese 3 (1).html" class="back">⬅ Back to Home</a>
+  
+</body>
+</html>
